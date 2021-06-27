@@ -16,7 +16,29 @@ public class CoinChange {
     private long[][] memo;
 
     private long getWays(int n, List<Integer> c) {
+        memo = new long[n + 1][c.size() + 1];
+        for (long[] arr : memo)
+            Arrays.fill(arr, -1);
+        return getWays(n, c, 0);
+    }
 
+    private long getWays(int n, List<Integer> c, int i) {
+        if (n == 0)
+            return 1;
+
+        long a = 0;
+        long b = 0;
+        if (i < c.size() && n - c.get(i) >= 0) {
+            if (memo[n - c.get(i)][i] < 0)
+                memo[n - c.get(i)][i] = getWays(n - c.get(i), c, i);
+            a = memo[n - c.get(i)][i];
+        }
+        if (i + 1 < c.size()) {
+            if (memo[n][i + 1] < 0)
+                memo[n][i + 1] = getWays(n, c, i + 1);
+            b = memo[n][i + 1];
+        }
+        return a + b;
     }
 
     public static void main(String[] args) throws IOException {
